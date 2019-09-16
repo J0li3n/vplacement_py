@@ -50,7 +50,7 @@ class Spoonacular:
         base_url = "https://api.spoonacular.com/recipes/search"
         parameters = {"apiKey": self.API_KEY,
                       "query": self.ingredients,
-                      "diet": self.veg_option}
+                       "diet": self.veg_option}
         response = requests.request("GET", base_url, params=parameters)
         self.output_recipes = response.json()
         return self.output_recipes
@@ -81,6 +81,8 @@ class Spoonacular:
                 df['aisle'].str.contains('Pasta')]
 
         ingredients_list = df['name'].tolist()
+        #Take only the last word of the ingredients to prevent too specific ingredients
+        ingredients_list = [ingredient.split()[-1] for ingredient in ingredients_list]
 
         # Take the top 5 ingredients
         ingredients_list5 = ingredients_list[0:5]
