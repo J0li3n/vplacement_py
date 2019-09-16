@@ -1,6 +1,13 @@
 import requests
 import pandas as pd
-import json
+
+import os
+#from dotenv import load_dotenv
+from dotenv import load_dotenv
+
+load_dotenv(dotenv_path='vplacement/config/.env')
+
+API_KEY = os.getenv('API_KEY')
 
 #Make Spoonacular class
 
@@ -16,7 +23,7 @@ def get_input_recipe(url):
 
     """
     base_url = "https://api.spoonacular.com/recipes/extract"
-    parameters = {"apiKey": API_key,
+    parameters = {"apiKey": API_KEY,
                   "url": url}
     response = requests.request("GET", base_url, params=parameters)
     response_json = response.json()
@@ -35,16 +42,12 @@ def get_output_recipes(ingredients, veg_option='vegetarian'):
 
     """
     base_url = "https://api.spoonacular.com/recipes/search"
-    parameters = {"apiKey": API_key,
+    parameters = {"apiKey": API_KEY,
                   "query": ingredients,
                   "diet": veg_option}
     response = requests.request("GET", base_url, params=parameters)
     response_json = response.json()
     return response_json
-
-#response_json = get_input_recipe("https://www.ricardocuisine.com/en/recipes/5762-classic-beef-chili")
-#get_output_recipes(ingredients_str)
-
 
 def get_ingredients(response_json):
     # Get ingredients
@@ -68,4 +71,8 @@ def get_ingredients(response_json):
     ingredients_str = ','.join(ingredients_list5)
     return ingredients_str
 
+response_json = get_input_recipe("https://www.ricardocuisine.com/en/recipes/5762-classic-beef-chili")
+ingredients_str = get_ingredients(response_json)
+recipes = get_output_recipes(ingredients_str)
+print(recipes)
 
