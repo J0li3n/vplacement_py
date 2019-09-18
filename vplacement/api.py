@@ -21,7 +21,7 @@ def home():
 <p>Whoop, whoop, coolest webapp ever!! </p>'''
 
 
-# A route to return all of the available entries in our catalog.
+# A route to return the output recipes
 @app.route('/results', methods=['GET'])
 def api_all():
     return recipe.output_recipes
