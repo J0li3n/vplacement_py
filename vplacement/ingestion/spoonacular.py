@@ -4,7 +4,7 @@ import pandas as pd
 import os
 from dotenv import load_dotenv
 
-load_dotenv(dotenv_path='vplacement/config/.env')
+load_dotenv(dotenv_path='config/.env')
 
 #API_KEY = os.getenv('API_KEY')
 

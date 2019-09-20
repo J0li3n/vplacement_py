@@ -3,7 +3,7 @@ from flask import request, jsonify
 from dotenv import load_dotenv
 from ingestion.spoonacular import Spoonacular
 
-load_dotenv(dotenv_path='vplacement/config/.env')
+load_dotenv(dotenv_path='config/.env')
 
 #Creating an object
 recipe = Spoonacular("https://www.delish.com/cooking/recipe-ideas/recipes/a57949/easy-shepherds-pie-recipe/")
@@ -26,4 +26,8 @@ def home():
 def api_all():
     return recipe.output_recipes
 
-app.run()
+if __name__ == "__main__":
+    app.run(host='0.0.0.0')
+
+#app.run()
+
