@@ -16,8 +16,9 @@ def home():
 @app.route('/recipe')
 def url_request():
     input_recipe_url = request.args.get('url')
+    veg_option = request.args.get('diet')
     # Creating an object
-    recipe = Spoonacular(input_recipe_url)
+    recipe = Spoonacular(input_recipe_url, veg_option)
 
     #Perform steps
     recipe.get_input_recipe()
