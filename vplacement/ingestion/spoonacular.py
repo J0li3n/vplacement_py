@@ -6,15 +6,15 @@ from dotenv import load_dotenv
 
 load_dotenv(dotenv_path='config/.env')
 
-#API_KEY = os.getenv('API_KEY')
-
 class Spoonacular:
-    def __init__(self, input_recipe_url):
+
+    def __init__(self, input_recipe_url, veg_option='vegetarian'):
         self.API_KEY = os.getenv('API_KEY')
         self.input_recipe_url = input_recipe_url
         self.input_recipe = {}
+        self.original_df = pd.DataFrame
         self.ingredients = ''
-        self.veg_option = 'vegetarian'
+        self.veg_option = veg_option
         self.output_recipes = {}
 
     def get_input_recipe(self):
@@ -26,7 +26,6 @@ class Spoonacular:
 
         Returns:
         JSON: Recipe characteristics
-
         """
         base_url = "https://api.spoonacular.com/recipes/extract"
         parameters = {"apiKey": self.API_KEY,
@@ -34,7 +33,6 @@ class Spoonacular:
         response = requests.request("GET", base_url, params=parameters)
         self.input_recipe = response.json()
         return self.input_recipe
-
 
     def get_output_recipes(self):
         """
@@ -45,17 +43,16 @@ class Spoonacular:
 
         Returns:
         JSON: Recipes
-
         """
         base_url = "https://api.spoonacular.com/recipes/search"
         parameters = {"apiKey": self.API_KEY,
                       "query": self.ingredients,
-                       "diet": self.veg_option}
+                      "diet": self.veg_option}
         response = requests.request("GET", base_url, params=parameters)
         self.output_recipes = response.json()
         return self.output_recipes
 
-    #Improve this function and cut into different functions
+    # Improve this function and cut into different functions
     def get_ingredients(self):
         """
         Function to get ingredients from input recipes
@@ -69,23 +66,28 @@ class Spoonacular:
         # Get ingredients
         ingredients = self.input_recipe['extendedIngredients']
         # Create dataframe
-        df = pd.DataFrame(ingredients)
+        self.original_df = pd.DataFrame(ingredients)
         # Exclude meat from dataframe
-        df = df[df['aisle'] != 'Meat']
+        df = self.original_df[self.original_df['aisle'] != 'Meat']
         df = df[-((df['name'].str.contains('meat')) |
                   (df['name'].str.contains('beef')) |
                   (df['name'].str.contains('chicken')))]
         # Select only some ingredients
         df = df[df['aisle'].str.contains('Produce') |
                 df['aisle'].str.contains('Canned') |
-                df['aisle'].str.contains('Pasta')]
+                df['aisle'].str.contains('Pasta') |
+                df['aisle'].str.contains('Cheese')
+        ]
+
+        if(self.veg_option == 'vegan'):
+            df = df[-(df['aisle'].str.contains('Cheese'))]
+
 
         ingredients_list = df['name'].tolist()
-        #Take only the last word of the ingredients to prevent too specific ingredients
+        # Take only the last word of the ingredients to prevent too specific ingredients
         ingredients_list = [ingredient.split()[-1] for ingredient in ingredients_list]
 
         # Take the top 5 ingredients
         ingredients_list5 = ingredients_list[0:5]
         self.ingredients = ','.join(ingredients_list5)
         return self.ingredients
-

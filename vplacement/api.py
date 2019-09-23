@@ -26,11 +26,6 @@ def url_request():
 
     return recipe.output_recipes
 
-# A route to return the output recipes
-@app.route('/results', methods=['GET'])
-def api_all():
-    return recipe.output_recipes
-
 if __name__ == "__main__":
     app.run(host='0.0.0.0')
 
