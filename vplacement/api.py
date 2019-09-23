@@ -5,13 +5,6 @@ from ingestion.spoonacular import Spoonacular
 
 load_dotenv(dotenv_path='config/.env')
 
-#Creating an object
-recipe = Spoonacular("https://www.delish.com/cooking/recipe-ideas/recipes/a57949/easy-shepherds-pie-recipe/")
-
-recipe.get_input_recipe()
-recipe.get_ingredients()
-recipe.get_output_recipes()
-
 app = flask.Flask(__name__)
 app.config["DEBUG"] = True
 
@@ -20,6 +13,18 @@ def home():
     return '''<h1>Vplacement</h1>
 <p>Whoop, whoop, coolest webapp ever!! </p>'''
 
+@app.route('/recipe')
+def url_request():
+    input_recipe_url = request.args.get('url')
+    # Creating an object
+    recipe = Spoonacular(input_recipe_url)
+
+    #Perform steps
+    recipe.get_input_recipe()
+    recipe.get_ingredients()
+    recipe.get_output_recipes()
+
+    return recipe.output_recipes
 
 # A route to return the output recipes
 @app.route('/results', methods=['GET'])
@@ -28,6 +33,4 @@ def api_all():
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0')
-
-#app.run()
 
