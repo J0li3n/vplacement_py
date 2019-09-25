@@ -34,7 +34,7 @@ class Spoonacular:
         self.input_recipe = response.json()
         return self.input_recipe
 
-    def get_output_recipes(self):
+    def get_output_recipes(self, number=100, ranking=1):
         """
         Function return output recipe based on original ingredients
 
@@ -47,7 +47,10 @@ class Spoonacular:
         base_url = "https://api.spoonacular.com/recipes/search"
         parameters = {"apiKey": self.API_KEY,
                       "query": self.ingredients,
-                      "diet": self.veg_option}
+                      "diet": self.veg_option,
+                      "number": number,
+                      "ranking": ranking,
+                      }
         response = requests.request("GET", base_url, params=parameters)
         self.output_recipes = response.json()
         return self.output_recipes
@@ -67,6 +70,7 @@ class Spoonacular:
         ingredients = self.input_recipe['extendedIngredients']
         # Create dataframe
         self.original_df = pd.DataFrame(ingredients)
+
         # Exclude meat from dataframe
         df = self.original_df[self.original_df['aisle'] != 'Meat']
         df = df[-((df['name'].str.contains('meat')) |
