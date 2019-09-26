@@ -1,5 +1,6 @@
 import requests
 import pandas as pd
+import json
 
 import os
 from dotenv import load_dotenv
@@ -34,7 +35,7 @@ class Spoonacular:
         self.input_recipe = response.json()
         return self.input_recipe
 
-    def get_output_recipes(self, number=100, ranking=1):
+    def get_output_recipes(self, number=2, ranking=1, ignore_pantry=True):
         """
         Function return output recipe based on original ingredients
 
@@ -44,15 +45,15 @@ class Spoonacular:
         Returns:
         JSON: Recipes
         """
-        base_url = "https://api.spoonacular.com/recipes/search"
+        base_url = "https://api.spoonacular.com/recipes/findByIngredients"
         parameters = {"apiKey": self.API_KEY,
-                      "query": self.ingredients,
-                      "diet": self.veg_option,
+                      "ingredients": self.ingredients,
                       "number": number,
                       "ranking": ranking,
+                      "ignorePantry": ignore_pantry,
                       }
         response = requests.request("GET", base_url, params=parameters)
-        self.output_recipes = response.json()
+        self.output_recipes = json.dumps({"object": response.json()})
         return self.output_recipes
 
     # Improve this function and cut into different functions
