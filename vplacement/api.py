@@ -28,7 +28,7 @@ def url_request():
     #Perform steps
     recipe.get_input_recipe()
     recipe.get_ingredients()
-    recipe.get_output_recipes()
+    jsonify(recipe.get_output_recipes())
 
     return recipe.output_recipes
 
