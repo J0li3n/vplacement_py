@@ -34,7 +34,7 @@ class Spoonacular:
         self.input_recipe = response.json()
         return self.input_recipe
 
-    def get_output_recipes(self, number=100):
+    def get_output_recipes(self, number=100, ranking=1):
         """
         Function return output recipe based on original ingredients
 
@@ -48,7 +48,8 @@ class Spoonacular:
         parameters = {"apiKey": self.API_KEY,
                       "query": self.ingredients,
                       "diet": self.veg_option,
-                      "number": number
+                      "number": number,
+                      "ranking": ranking,
                       }
         response = requests.request("GET", base_url, params=parameters)
         self.output_recipes = response.json()
