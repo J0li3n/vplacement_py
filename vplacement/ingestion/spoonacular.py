@@ -53,8 +53,8 @@ class Spoonacular:
                       "ignorePantry": ignore_pantry,
                       }
         response = requests.request("GET", base_url, params=parameters)
-        self.output_recipes = json.dumps({"object": response.json()})
-
+        self.output_recipes = json.dumps({"output_recipes": response.json()})
+        self.output_recipes = json.loads(self.output_recipes)
         return self.output_recipes
 
     # Improve this function and cut into different functions
