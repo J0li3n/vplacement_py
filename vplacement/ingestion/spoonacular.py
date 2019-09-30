@@ -16,7 +16,8 @@ class Spoonacular:
         self.original_df = pd.DataFrame
         self.ingredients = ''
         self.veg_option = veg_option
-        self.output_recipes = {}
+        self.output_recipes = []
+        self.output_recipes_veg = []
 
     def get_input_recipe(self):
         """
@@ -53,8 +54,7 @@ class Spoonacular:
                       "ignorePantry": ignore_pantry,
                       }
         response = requests.request("GET", base_url, params=parameters)
-        self.output_recipes = json.dumps({"output_recipes": response.json()})
-        self.output_recipes = json.loads(self.output_recipes)
+        self.output_recipes = response.json()
         return self.output_recipes
 
     # Improve this function and cut into different functions
@@ -73,30 +73,40 @@ class Spoonacular:
         # Create dataframe
         self.original_df = pd.DataFrame(ingredients)
 
-        # Exclude meat from dataframe
+        # Exclude meat and seafood from dataframe
         df = self.original_df[self.original_df['aisle'] != 'Meat']
+        df = df[df['aisle'] != 'Seafood']
         df = df[-((df['name'].str.contains('meat')) |
                   (df['name'].str.contains('beef')) |
                   (df['name'].str.contains('chicken')))]
-        # Select only some ingredients
-        df = df[df['aisle'].str.contains('Produce') |
-                df['aisle'].str.contains('Canned') |
-                df['aisle'].str.contains('Pasta') |
-                df['aisle'].str.contains('Cheese')
-        ]
 
-        if(self.veg_option == 'vegan'):
+        if self.veg_option == 'vegan':
             df = df[-(df['aisle'].str.contains('Cheese'))]
 
-
+        # Turn the ingredients in a list and then a string
         ingredients_list = df['name'].tolist()
-        # Take only the last word of the ingredients to prevent too specific ingredients
-        ingredients_list = [ingredient.split()[-1] for ingredient in ingredients_list]
-
-        # Take the top 5 ingredients
-        ingredients_list5 = ingredients_list[0:5]
-        self.ingredients = ','.join(ingredients_list5)
+        self.ingredients = ','.join(ingredients_list)
         return self.ingredients
+
+    def remove_meat_recipes(self):
+        result = []
+        result_ids = []
+        meat_words = ['chicken', 'beef', 'meat']
+        for recipe in range(0, len(self.output_recipes)):
+            for ingredient in range(0, len(self.output_recipes[recipe]['missedIngredients'])):
+                # Only continue when the recipe is not already found to have meat
+                if self.output_recipes[recipe]['id'] not in (result_ids):
+                    # Add recipe id to list if the recipe contains meat or seafood
+                    if ((self.output_recipes[recipe]['missedIngredients'][ingredient]['aisle'] == 'Meat') |
+                            (self.output_recipes[recipe]['missedIngredients'][ingredient]['aisle'] == 'Seafood') |
+                            any(word in self.output_recipes[recipe]['missedIngredients'][ingredient]['name']
+                                for word in meat_words)):
+                        result.append(self.output_recipes[recipe])
+                        result_ids.append(self.output_recipes[recipe]['id'])
+            if self.output_recipes[recipe]['id'] not in (result_ids):
+                self.output_recipes_veg.append(self.output_recipes[recipe])
+        self.output_recipes_veg = json.dumps({"output_recipes": self.output_recipes_veg})
+        self.output_recipes_veg = json.loads(self.output_recipes_veg)
 
 class RecipeId:
 
@@ -106,6 +116,15 @@ class RecipeId:
         self.recipe_info = {}
 
     def get_recipe_info(self):
+        """
+        Function to get recipe information from recipe id
+
+        Parameters:
+        self.recipe_id (str): recipe id
+
+        Returns:
+        JSON: recipe information
+        """
         base_url = "https://api.spoonacular.com/recipes/{}/information".format(self.recipe_id)
         parameters = {"apiKey": self.API_KEY}
         response = requests.request("GET", base_url, params=parameters)
