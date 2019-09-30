@@ -28,9 +28,10 @@ def url_request():
     #Perform steps
     recipe.get_input_recipe()
     recipe.get_ingredients()
-    jsonify(recipe.get_output_recipes())
+    recipe.get_output_recipes()
+    recipe.remove_meat_recipes()
 
-    return recipe.output_recipes
+    return recipe.output_recipes_veg
 
 @app.route('/recipeId')
 @cross_origin()
