@@ -54,6 +54,7 @@ class Spoonacular:
                       }
         response = requests.request("GET", base_url, params=parameters)
         self.output_recipes = json.dumps({"object": response.json()})
+
         return self.output_recipes
 
     # Improve this function and cut into different functions
@@ -98,6 +99,7 @@ class Spoonacular:
         return self.ingredients
 
 class RecipeId:
+
     def __init__(self, recipe_id):
         self.API_KEY = os.getenv('API_KEY')
         self.recipe_id = recipe_id
