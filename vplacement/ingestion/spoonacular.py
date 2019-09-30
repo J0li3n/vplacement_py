@@ -35,7 +35,7 @@ class Spoonacular:
         self.input_recipe = response.json()
         return self.input_recipe
 
-    def get_output_recipes(self, number=2, ranking=1, ignore_pantry=True):
+    def get_output_recipes(self, number=20, ranking=1, ignore_pantry=True):
         """
         Function return output recipe based on original ingredients
 
@@ -53,7 +53,8 @@ class Spoonacular:
                       "ignorePantry": ignore_pantry,
                       }
         response = requests.request("GET", base_url, params=parameters)
-        self.output_recipes = json.dumps({"object": response.json()})
+        self.output_recipes = json.dumps({"output_recipes": response.json()})
+        self.output_recipes = json.loads(self.output_recipes)
         return self.output_recipes
 
     # Improve this function and cut into different functions
@@ -96,3 +97,17 @@ class Spoonacular:
         ingredients_list5 = ingredients_list[0:5]
         self.ingredients = ','.join(ingredients_list5)
         return self.ingredients
+
+class RecipeId:
+
+    def __init__(self, recipe_id):
+        self.API_KEY = os.getenv('API_KEY')
+        self.recipe_id = recipe_id
+        self.recipe_info = {}
+
+    def get_recipe_info(self):
+        base_url = "https://api.spoonacular.com/recipes/{}/information".format(self.recipe_id)
+        parameters = {"apiKey": self.API_KEY}
+        response = requests.request("GET", base_url, params=parameters)
+        self.recipe_info = response.json()
+        return self.recipe_info
