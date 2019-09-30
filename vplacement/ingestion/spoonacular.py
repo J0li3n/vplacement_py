@@ -73,29 +73,19 @@ class Spoonacular:
         # Create dataframe
         self.original_df = pd.DataFrame(ingredients)
 
-        # Exclude meat from dataframe
+        # Exclude meat and seafood from dataframe
         df = self.original_df[self.original_df['aisle'] != 'Meat']
+        df = self.original_df[self.original_df['aisle'] != 'Seafood']
         df = df[-((df['name'].str.contains('meat')) |
                   (df['name'].str.contains('beef')) |
                   (df['name'].str.contains('chicken')))]
-        # Select only some ingredients
-        df = df[df['aisle'].str.contains('Produce') |
-                df['aisle'].str.contains('Canned') |
-                df['aisle'].str.contains('Pasta') |
-                df['aisle'].str.contains('Cheese')
-        ]
 
         if(self.veg_option == 'vegan'):
             df = df[-(df['aisle'].str.contains('Cheese'))]
 
-
+        #Turn the ingredients in a list and then a string
         ingredients_list = df['name'].tolist()
-        # Take only the last word of the ingredients to prevent too specific ingredients
-        ingredients_list = [ingredient.split()[-1] for ingredient in ingredients_list]
-
-        # Take the top 5 ingredients
-        ingredients_list5 = ingredients_list[0:5]
-        self.ingredients = ','.join(ingredients_list5)
+        self.ingredients = ','.join(ingredients_list)
         return self.ingredients
 
 class RecipeId:
@@ -106,6 +96,15 @@ class RecipeId:
         self.recipe_info = {}
 
     def get_recipe_info(self):
+        """
+        Function to get recipe information from recipe id
+
+        Parameters:
+        self.recipe_id (str): recipe id
+
+        Returns:
+        JSON: recipe information
+        """
         base_url = "https://api.spoonacular.com/recipes/{}/information".format(self.recipe_id)
         parameters = {"apiKey": self.API_KEY}
         response = requests.request("GET", base_url, params=parameters)
