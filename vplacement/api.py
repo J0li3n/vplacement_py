@@ -17,11 +17,25 @@ def home():
     return '''<h1>Vplacement</h1>
 <p>Whoop, whoop, coolest webapp ever!! </p>'''
 
-@app.route('/recipe')
+@app.route('/recipeUrl')
 @cross_origin()
 def url_request():
     input_recipe_url = request.args.get('url')
     veg_option = request.args.get('diet')
+    # Creating an object
+    recipe = Spoonacular(input_recipe_url, veg_option)
+
+    #Perform steps
+    recipe.get_input_recipe()
+    recipe.get_ingredients()
+    jsonify(recipe.get_output_recipes())
+
+    return recipe.output_recipes
+
+@app.route('/recipeId')
+@cross_origin()
+def url_request():
+    input_recipe_url = request.args.get('id')
     # Creating an object
     recipe = Spoonacular(input_recipe_url, veg_option)
 

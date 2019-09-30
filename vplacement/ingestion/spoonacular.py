@@ -96,3 +96,16 @@ class Spoonacular:
         ingredients_list5 = ingredients_list[0:5]
         self.ingredients = ','.join(ingredients_list5)
         return self.ingredients
+
+class RecipeId:
+    def __init__(self, recipe_id):
+        self.API_KEY = os.getenv('API_KEY')
+        self.recipe_id = recipe_id
+        self.recipe_info = {}
+
+    def get_recipe_info(self):
+        base_url = "https://api.spoonacular.com/recipes/{}/information".format(self.recipe_id)
+        parameters = {"apiKey": self.API_KEY}
+        response = requests.request("GET", base_url, params=parameters)
+        self.recipe_info = response.json()
+        return self.recipe_info
