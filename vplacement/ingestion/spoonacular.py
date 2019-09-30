@@ -35,7 +35,7 @@ class Spoonacular:
         self.input_recipe = response.json()
         return self.input_recipe
 
-    def get_output_recipes(self, number=2, ranking=1, ignore_pantry=True):
+    def get_output_recipes(self, number=20, ranking=1, ignore_pantry=True):
         """
         Function return output recipe based on original ingredients
 
