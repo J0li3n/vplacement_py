@@ -173,3 +173,6 @@ class RecipeId:
         response = requests.request("GET", base_url, params=parameters)
         self.similar_recipes = response.json()
         return self.similar_recipes
+
+    def combine_info_similar(self):
+        return {"recipe_info": self.recipe_info, "similar_recipes": self.similar_recipes}
