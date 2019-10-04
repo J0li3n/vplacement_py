@@ -22,14 +22,18 @@ def home():
 def url_request():
     input_recipe_url = request.args.get('url')
     veg_option = request.args.get('diet')
+    allergies = request.args.get('allergies')
     # Creating an object
-    recipe = Spoonacular(input_recipe_url, veg_option)
+    recipe = Spoonacular(input_recipe_url, veg_option, allergies)
 
     #Perform steps
     recipe.get_input_recipe()
     recipe.get_ingredients()
     recipe.get_output_recipes()
     recipe.remove_meat_recipes()
+    # if recipe.allergies is not None:
+    #     recipe.remove_allergies()
+    recipe.list_to_json()
 
     return recipe.output_recipes_veg
 
