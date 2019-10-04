@@ -110,8 +110,6 @@ class Spoonacular:
                         result_ids.append(self.output_recipes[recipe]['id'])
             if self.output_recipes[recipe]['id'] not in (result_ids):
                 self.output_recipes_veg.append(self.output_recipes[recipe])
-        #self.output_recipes_veg = json.dumps({"output_recipes": self.output_recipes_veg})
-        #self.output_recipes_veg = json.loads(self.output_recipes_veg)
         return self.output_recipes_veg
 
     def remove_allergies(self):
@@ -131,8 +129,6 @@ class Spoonacular:
             if self.output_recipes_veg[recipe]['id'] not in result_ids:
                 allergy_free_recipes.append(self.output_recipes_veg[recipe])
         self.output_recipes_veg = allergy_free_recipes
-        #allergy_free_recipes = json.dumps({"output_recipes": allergy_free_recipes})
-        #self.output_recipes_veg = json.loads(allergy_free_recipes)
         return self.output_recipes_veg
 
     def list_to_json(self):
