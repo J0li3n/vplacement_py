@@ -27,8 +27,8 @@ print(len(recipe.output_recipes_veg[0]['missedIngredients']))
 print(len(recipe.output_recipes_veg[1]['missedIngredients']))
 
 recipe.remove_allergies()
-
-print(len(recipe.output_recipes_veg))
+recipe.list_to_json()
+print(recipe.output_recipes_veg)
 
 # print(recipe.ingredients)
 # print(recipe.original_df[['aisle', 'name', 'original']])

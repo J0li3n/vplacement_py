@@ -33,9 +33,8 @@ def url_request():
     recipe.remove_meat_recipes()
     # if recipe.allergies is not None:
     #     recipe.remove_allergies()
-    recipe.list_to_json()
 
-    return recipe.output_recipes_veg
+    return recipe.list_to_json()
 
 @app.route('/recipeId')
 @cross_origin()
