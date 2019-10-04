@@ -132,9 +132,7 @@ class Spoonacular:
         return self.output_recipes_veg
 
     def list_to_json(self):
-        self.output_recipes_veg = json.dumps({"output_recipes": self.output_recipes_veg})
-        self.output_recipes_veg = json.loads(self.output_recipes_veg)
-        return self.output_recipes_veg
+        return {"output_recipes": self.output_recipes_veg}
 
 class RecipeId:
 
