@@ -33,6 +33,8 @@ print(recipe.output_recipes_veg)
 # print(recipe.ingredients)
 # print(recipe.original_df[['aisle', 'name', 'original']])
 
-# recipe = RecipeId("716429")
-# recipe.get_recipe_info()
-# recipe.recipe_info
+recipe = RecipeId("716429")
+recipe.get_recipe_info()
+recipe.get_similar_recipes()
+print(recipe.similar_recipes[0])
+
