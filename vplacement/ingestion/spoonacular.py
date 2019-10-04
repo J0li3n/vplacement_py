@@ -140,6 +140,7 @@ class RecipeId:
         self.API_KEY = os.getenv('API_KEY')
         self.recipe_id = recipe_id
         self.recipe_info = {}
+        self.similar_recipes = {}
 
     def get_recipe_info(self):
         """
@@ -156,3 +157,22 @@ class RecipeId:
         response = requests.request("GET", base_url, params=parameters)
         self.recipe_info = response.json()
         return self.recipe_info
+
+    def get_similar_recipes(self):
+        """
+        Function to get a similar recipe from recipe id
+
+        Parameters:
+        self.recipe_id (str): recipe id
+
+        Returns:
+        JSON: recipe information
+        """
+        base_url = "https://api.spoonacular.com/recipes/{}/similar".format(self.recipe_id)
+        parameters = {"apiKey": self.API_KEY}
+        response = requests.request("GET", base_url, params=parameters)
+        self.similar_recipes = response.json()
+        return self.similar_recipes
+
+    def combine_info_similar(self):
+        return {"recipe_info": self.recipe_info, "similar_recipes": self.similar_recipes}

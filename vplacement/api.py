@@ -44,8 +44,9 @@ def id_request():
     recipe = RecipeId(recipe_id)
     # Request info of that recipe
     recipe.get_recipe_info()
+    recipe.get_similar_recipes()
 
-    return recipe.recipe_info
+    return recipe.combine_info_similar()
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0')
