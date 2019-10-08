@@ -87,6 +87,9 @@ class Spoonacular:
 
         if self.veg_option == 'vegan':
             df = df[-(df['aisle'].str.contains('Cheese'))]
+            df = df[-(df['aisle'].str.contains('Dairy'))]
+            df = df[-(df['name'].str.contains('mayonnaise'))]
+            df = df[-(df['name'].str.contains('honey'))]
 
         # Turn the ingredients in a list and then a string
         ingredients_list = df['name'].tolist()
@@ -96,7 +99,7 @@ class Spoonacular:
     def remove_meat_recipes(self):
         result = []
         result_ids = []
-        meat_words = ['chicken', 'beef', 'meat']
+        meat_words = ['chicken', 'beef', 'meat', 'fish', 'salmon', 'tuna', 'anchovies', 'tilapia']
         for recipe in range(0, len(self.output_recipes)):
             for ingredient in range(0, len(self.output_recipes[recipe]['missedIngredients'])):
                 # Only continue when the recipe is not already found to have meat
@@ -112,13 +115,35 @@ class Spoonacular:
                 self.output_recipes_veg.append(self.output_recipes[recipe])
         return self.output_recipes_veg
 
+    def remove_nonvegan_recipes(self):
+        result = []
+        result_ids = []
+        vegan_recipes = []
+        nonvegan_words = ['honey']
+        for recipe in range(0, len(self.output_recipes_veg)):
+            for ingredient in range(0, (len(self.output_recipes_veg[recipe]['missedIngredients']))):
+                # Only continue when the recipe is not already found to have an allergy ingredient
+                if self.output_recipes_veg[recipe]['id'] not in result_ids:
+                    # Add recipe id to list if the recipe contains a nonvegan ingredient
+                    if ((self.output_recipes_veg[recipe]['missedIngredients'][ingredient]['aisle'] ==
+                         'Milk, Eggs, Other Diary') |
+                            (self.output_recipes_veg[recipe]['missedIngredients'][ingredient]['aisle'] == 'Cheese') |
+                            any(word in self.output_recipes_veg[recipe]['missedIngredients'][ingredient]['name']
+                                for word in nonvegan_words)):
+                        result.append(self.output_recipes_veg[recipe])
+                        result_ids.append(self.output_recipes_veg[recipe]['id'])
+            if self.output_recipes_veg[recipe]['id'] not in result_ids:
+                vegan_recipes.append(self.output_recipes_veg[recipe])
+        self.output_recipes_veg = vegan_recipes
+        return self.output_recipes_veg
+
     def remove_allergies(self):
         result = []
         result_ids = []
         allergy_free_recipes = []
         allergy_list = self.allergies.split(', ')
         for recipe in range(0, len(self.output_recipes_veg)):
-            for ingredient in range(0, (len(self.output_recipes_veg[recipe]['missedIngredients'])-1)):
+            for ingredient in range(0, (len(self.output_recipes_veg[recipe]['missedIngredients']))):
                 # Only continue when the recipe is not already found to have an allergy ingredient
                 if self.output_recipes_veg[recipe]['id'] not in result_ids:
                     # Add recipe id to list if the recipe contains an allergy ingredient
