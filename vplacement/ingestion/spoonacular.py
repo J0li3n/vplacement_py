@@ -37,7 +37,7 @@ class Spoonacular:
         self.input_recipe = response.json()
         return self.input_recipe
 
-    def get_output_recipes(self, number=20, ranking=1, ignore_pantry=True):
+    def get_output_recipes(self, number=50, ranking=1, ignore_pantry=True):
         """
         Function return output recipe based on original ingredients
 
@@ -119,15 +119,14 @@ class Spoonacular:
         result = []
         result_ids = []
         vegan_recipes = []
-        nonvegan_words = ['honey']
+        nonvegan_words = ['honey', 'mayonnaise']
         for recipe in range(0, len(self.output_recipes_veg)):
             for ingredient in range(0, (len(self.output_recipes_veg[recipe]['missedIngredients']))):
                 # Only continue when the recipe is not already found to have an allergy ingredient
                 if self.output_recipes_veg[recipe]['id'] not in result_ids:
                     # Add recipe id to list if the recipe contains a nonvegan ingredient
-                    if ((self.output_recipes_veg[recipe]['missedIngredients'][ingredient]['aisle'] ==
-                         'Milk, Eggs, Other Diary') |
-                            (self.output_recipes_veg[recipe]['missedIngredients'][ingredient]['aisle'] == 'Cheese') |
+                    if (('Dairy' in self.output_recipes_veg[recipe]['missedIngredients'][ingredient]['aisle']) |
+                            ('Cheese' in self.output_recipes_veg[recipe]['missedIngredients'][ingredient]['aisle']) |
                             any(word in self.output_recipes_veg[recipe]['missedIngredients'][ingredient]['name']
                                 for word in nonvegan_words)):
                         result.append(self.output_recipes_veg[recipe])
