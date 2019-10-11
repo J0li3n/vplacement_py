@@ -31,8 +31,10 @@ def url_request():
     recipe.get_ingredients()
     recipe.get_output_recipes()
     recipe.remove_meat_recipes()
-    # if recipe.allergies is not None:
-    #     recipe.remove_allergies()
+    if recipe.allergies is not None:
+        recipe.remove_allergies()
+    if recipe.veg_option is not 'vegetarian':
+        recipe.remove_nonvegan_recipes()
 
     return recipe.list_to_json()
 
