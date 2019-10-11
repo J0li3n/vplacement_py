@@ -85,7 +85,7 @@ class Spoonacular:
             allergies_list = self.allergies.split(",")
             df = df[-(df['name'].apply(lambda x: any(word in x for word in allergies_list)))]
 
-        if self.veg_option == 'vegan':
+        if self.veg_option is not 'vegetarian':
             df = df[-(df['aisle'].str.contains('Cheese'))]
             df = df[-(df['aisle'].str.contains('Dairy'))]
             df = df[-(df['name'].str.contains('mayonnaise'))]
