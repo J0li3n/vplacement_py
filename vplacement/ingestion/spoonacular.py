@@ -108,13 +108,14 @@ class Spoonacular:
                 if self.output_recipes[recipe]['id'] not in (result_ids):
                     # Add recipe id to list if the recipe contains meat or seafood
                     if ((self.output_recipes[recipe]['missedIngredients'][ingredient]['aisle'] == 'Meat') |
-                       (self.output_recipes[recipe]['missedIngredients'][ingredient]['aisle'] == 'Seafood')):
-                        result.append(self.output_recipes_veg[recipe])
-                        result_ids.append(self.output_recipes_veg[recipe]['id'])
-                        for word in self.meat_words:
-                            if word in self.output_recipes[recipe]['missedIngredients'][ingredient]['name']:
-                                result.append(self.output_recipes[recipe])
-                                result_ids.append(self.output_recipes[recipe]['id'])
+                            (self.output_recipes[recipe]['missedIngredients'][ingredient]['aisle'] == 'Seafood')):
+                        result.append(self.output_recipes[recipe])
+                        result_ids.append(self.output_recipes[recipe]['id'])
+                if self.output_recipes[recipe]['id'] not in (result_ids):
+                    for word in self.meat_words:
+                        if word in self.output_recipes[recipe]['missedIngredients'][ingredient]['name']:
+                            result.append(self.output_recipes[recipe])
+                            result_ids.append(self.output_recipes[recipe]['id'])
             if self.output_recipes[recipe]['id'] not in (result_ids):
                 self.output_recipes_veg.append(self.output_recipes[recipe])
         return self.output_recipes_veg
@@ -129,13 +130,14 @@ class Spoonacular:
                 if self.output_recipes_veg[recipe]['id'] not in result_ids:
                     # Add recipe id to list if the recipe contains a nonvegan ingredient
                     if (('Dairy' in self.output_recipes_veg[recipe]['missedIngredients'][ingredient]['aisle']) |
-                       ('Cheese' in self.output_recipes_veg[recipe]['missedIngredients'][ingredient]['aisle'])):
+                            ('Cheese' in self.output_recipes_veg[recipe]['missedIngredients'][ingredient]['aisle'])):
                         result.append(self.output_recipes_veg[recipe])
                         result_ids.append(self.output_recipes_veg[recipe]['id'])
-                        for word in self.nonvegan_words:
-                            if word in self.output_recipes_veg[recipe]['missedIngredients'][ingredient]['name']:
-                                result.append(self.output_recipes_veg[recipe])
-                                result_ids.append(self.output_recipes_veg[recipe]['id'])
+                if self.output_recipes_veg[recipe]['id'] not in (result_ids):
+                    for word in self.nonvegan_words:
+                        if word in self.output_recipes_veg[recipe]['missedIngredients'][ingredient]['name']:
+                            result.append(self.output_recipes_veg[recipe])
+                            result_ids.append(self.output_recipes_veg[recipe]['id'])
             if self.output_recipes_veg[recipe]['id'] not in result_ids:
                 vegan_recipes.append(self.output_recipes_veg[recipe])
         self.output_recipes_veg = vegan_recipes
