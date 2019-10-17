@@ -9,6 +9,7 @@ load_dotenv(dotenv_path='config/.env')
 
 class Spoonacular:
 
+
     def __init__(self, input_recipe_url, veg_option='vegetarian', allergies=None):
         self.API_KEY = os.getenv('API_KEY')
         self.input_recipe_url = input_recipe_url
@@ -19,6 +20,9 @@ class Spoonacular:
         self.output_recipes = []
         self.output_recipes_veg = []
         self.allergies = allergies
+        self.meat_words = ['chicken', 'beef', 'meat', 'fish', 'salmon', 'cod', 'tuna', 'anchovies', 'tilapia',
+                           'bacon', 'pork']
+        self.nonvegan_words = ['honey', 'mayonnaise', 'milk', 'egg', 'cheese', 'butter']
 
     def get_input_recipe(self):
         """
@@ -77,8 +81,7 @@ class Spoonacular:
         # Exclude meat and seafood from dataframe
         df = self.original_df[self.original_df['aisle'] != 'Meat']
         df = df[df['aisle'] != 'Seafood']
-        meat_words = ['meat', 'beef', 'chicken']
-        df = df[-(df['name'].apply(lambda x: any(word in x for word in meat_words)))]
+        df = df[-(df['name'].apply(lambda x: any(word in x for word in self.meat_words)))]
 
         # Exclude allergies from dataframe
         if self.allergies is not None:
@@ -99,18 +102,19 @@ class Spoonacular:
     def remove_meat_recipes(self):
         result = []
         result_ids = []
-        meat_words = ['chicken', 'beef', 'meat', 'fish', 'salmon', 'tuna', 'anchovies', 'tilapia']
         for recipe in range(0, len(self.output_recipes)):
             for ingredient in range(0, len(self.output_recipes[recipe]['missedIngredients'])):
                 # Only continue when the recipe is not already found to have meat
                 if self.output_recipes[recipe]['id'] not in (result_ids):
                     # Add recipe id to list if the recipe contains meat or seafood
                     if ((self.output_recipes[recipe]['missedIngredients'][ingredient]['aisle'] == 'Meat') |
-                            (self.output_recipes[recipe]['missedIngredients'][ingredient]['aisle'] == 'Seafood') |
-                            any(word in self.output_recipes[recipe]['missedIngredients'][ingredient]['name']
-                                for word in meat_words)):
-                        result.append(self.output_recipes[recipe])
-                        result_ids.append(self.output_recipes[recipe]['id'])
+                       (self.output_recipes[recipe]['missedIngredients'][ingredient]['aisle'] == 'Seafood')):
+                        result.append(self.output_recipes_veg[recipe])
+                        result_ids.append(self.output_recipes_veg[recipe]['id'])
+                        for word in self.meat_words:
+                            if word in self.output_recipes[recipe]['missedIngredients'][ingredient]['name']:
+                                result.append(self.output_recipes[recipe])
+                                result_ids.append(self.output_recipes[recipe]['id'])
             if self.output_recipes[recipe]['id'] not in (result_ids):
                 self.output_recipes_veg.append(self.output_recipes[recipe])
         return self.output_recipes_veg
@@ -119,18 +123,19 @@ class Spoonacular:
         result = []
         result_ids = []
         vegan_recipes = []
-        nonvegan_words = ['honey', 'mayonnaise']
         for recipe in range(0, len(self.output_recipes_veg)):
             for ingredient in range(0, (len(self.output_recipes_veg[recipe]['missedIngredients']))):
                 # Only continue when the recipe is not already found to have an allergy ingredient
                 if self.output_recipes_veg[recipe]['id'] not in result_ids:
                     # Add recipe id to list if the recipe contains a nonvegan ingredient
                     if (('Dairy' in self.output_recipes_veg[recipe]['missedIngredients'][ingredient]['aisle']) |
-                            ('Cheese' in self.output_recipes_veg[recipe]['missedIngredients'][ingredient]['aisle']) |
-                            any(word in self.output_recipes_veg[recipe]['missedIngredients'][ingredient]['name']
-                                for word in nonvegan_words)):
+                       ('Cheese' in self.output_recipes_veg[recipe]['missedIngredients'][ingredient]['aisle'])):
                         result.append(self.output_recipes_veg[recipe])
                         result_ids.append(self.output_recipes_veg[recipe]['id'])
+                        for word in self.nonvegan_words:
+                            if word in self.output_recipes_veg[recipe]['missedIngredients'][ingredient]['name']:
+                                result.append(self.output_recipes_veg[recipe])
+                                result_ids.append(self.output_recipes_veg[recipe]['id'])
             if self.output_recipes_veg[recipe]['id'] not in result_ids:
                 vegan_recipes.append(self.output_recipes_veg[recipe])
         self.output_recipes_veg = vegan_recipes
@@ -145,11 +150,11 @@ class Spoonacular:
             for ingredient in range(0, (len(self.output_recipes_veg[recipe]['missedIngredients']))):
                 # Only continue when the recipe is not already found to have an allergy ingredient
                 if self.output_recipes_veg[recipe]['id'] not in result_ids:
-                    # Add recipe id to list if the recipe contains an allergy ingredient
-                    if any(word in self.output_recipes_veg[recipe]['missedIngredients'][ingredient]['name']
-                           for word in allergy_list):
-                        result.append(self.output_recipes_veg[recipe])
-                        result_ids.append(self.output_recipes_veg[recipe]['id'])
+                    for word in allergy_list:
+                        # Add recipe id to list if the recipe contains an allergy ingredient
+                        if word in self.output_recipes_veg[recipe]['missedIngredients'][ingredient]['name']:
+                            result.append(self.output_recipes_veg[recipe])
+                            result_ids.append(self.output_recipes_veg[recipe]['id'])
             if self.output_recipes_veg[recipe]['id'] not in result_ids:
                 allergy_free_recipes.append(self.output_recipes_veg[recipe])
         self.output_recipes_veg = allergy_free_recipes
@@ -159,6 +164,7 @@ class Spoonacular:
         return {"output_recipes": self.output_recipes_veg}
 
 class RecipeId:
+
 
     def __init__(self, recipe_id):
         self.API_KEY = os.getenv('API_KEY')
