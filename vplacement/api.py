@@ -25,6 +25,9 @@ def url_request():
     allergies = request.args.get('allergies')
     if veg_option == None:
         veg_option = 'vegetarian'
+    if allergies is not None:
+        if 'lactose' in allergies:
+            veg_option = 'vegan'
     # Creating an object
     recipe = Spoonacular(input_recipe_url, veg_option, allergies)
 
@@ -37,9 +40,6 @@ def url_request():
         recipe.remove_allergies()
     if recipe.veg_option is not 'vegetarian':
         recipe.remove_nonvegan_recipes()
-    if recipe.allergies is 'lactose':
-        recipe.veg_option = 'vegan'
-        recipe.allergies = None
 
     return recipe.list_to_json()
 
