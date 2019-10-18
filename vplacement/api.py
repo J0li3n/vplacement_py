@@ -37,6 +37,9 @@ def url_request():
         recipe.remove_allergies()
     if recipe.veg_option is not 'vegetarian':
         recipe.remove_nonvegan_recipes()
+    if recipe.allergies is 'lactose':
+        recipe.veg_option = 'vegan'
+        recipe.allergies = None
 
     return recipe.list_to_json()
 
