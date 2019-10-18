@@ -13,7 +13,7 @@ from spoonacular import Spoonacular, RecipeId
 #recipe = Spoonacular("https://www.chicken.ca/recipes/one-pan-chicken-and-mushroom-tagliatelle", veg_option='vegan')
 # recipe = Spoonacular("https://www.ricardocuisine.com/en/recipes/407-fish-and-chips", veg_option='vegan')
 # recipe = Spoonacular("https://www.beefitswhatsfordinner.com/recipes/recipe/55558/classic-beef-meatloaf", veg_option = 'vegan')
-recipe = Spoonacular("https://www.allrecipes.com/recipe/20107/beer-batter-fish-made-great/", veg_option='vegan', allergies='tomato, garlic')
+recipe = Spoonacular("https://www.thekitchn.com/how-to-make-meatballs-cooking-lessons-from-the-kitchn-108048")
 
 # Perform steps
 recipe.get_input_recipe()
@@ -30,8 +30,8 @@ recipe.remove_meat_recipes()
 print(len(recipe.output_recipes_veg))
 recipe.remove_nonvegan_recipes()
 print(len(recipe.output_recipes_veg))
-recipe.remove_allergies()
-print(len(recipe.output_recipes_veg))
+# recipe.remove_allergies()
+# print(len(recipe.output_recipes_veg))
 
 for recipies in range(0, len(recipe.output_recipes_veg)):
     for ingredient in range(0, len(recipe.output_recipes_veg[recipies]['missedIngredients'])):

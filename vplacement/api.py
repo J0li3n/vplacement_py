@@ -23,6 +23,8 @@ def url_request():
     input_recipe_url = request.args.get('url')
     veg_option = request.args.get('diet')
     allergies = request.args.get('allergies')
+    if veg_option == None:
+        veg_option = 'vegetarian'
     # Creating an object
     recipe = Spoonacular(input_recipe_url, veg_option, allergies)
 

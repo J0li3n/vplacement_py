@@ -10,7 +10,7 @@ load_dotenv(dotenv_path='config/.env')
 class Spoonacular:
 
 
-    def __init__(self, input_recipe_url, veg_option='vegetarian', allergies=None):
+    def __init__(self, input_recipe_url, veg_option, allergies):
         self.API_KEY = os.getenv('API_KEY')
         self.input_recipe_url = input_recipe_url
         self.input_recipe = {}
@@ -102,6 +102,10 @@ class Spoonacular:
     def remove_meat_recipes(self):
         result_ids = []
         for recipe in range(0, len(self.output_recipes)):
+            for word in self.meat_words:
+                if ((word in self.output_recipes[recipe]['title']) &
+                        (('vegan' or 'vegetarian' or 'veggie') not in self.output_recipes[recipe]['title'])):
+                    result_ids.append(self.output_recipes[recipe]['id'])
             for ingredient in range(0, len(self.output_recipes[recipe]['missedIngredients'])):
                 # Only continue when the recipe is not already found to have meat
                 if self.output_recipes[recipe]['id'] not in (result_ids):
