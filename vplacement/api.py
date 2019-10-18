@@ -26,7 +26,7 @@ def url_request():
     if veg_option == None:
         veg_option = 'vegetarian'
     if allergies is not None:
-        if 'lactose' in allergies:
+        if 'dairy' in allergies:
             veg_option = 'vegan'
     # Creating an object
     recipe = Spoonacular(input_recipe_url, veg_option, allergies)
