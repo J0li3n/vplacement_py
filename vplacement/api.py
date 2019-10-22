@@ -51,7 +51,7 @@ def id_request():
     recipe = RecipeId(recipe_id)
     # Request info of that recipe
     recipe.get_recipe_info()
-    recipe.get_similar_recipes()
+    #recipe.get_similar_recipes()
 
     return recipe.combine_info_similar()
 
