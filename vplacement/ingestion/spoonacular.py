@@ -103,7 +103,7 @@ class Spoonacular:
         result_ids = []
         for recipe in range(0, len(self.output_recipes)):
             for word in self.meat_words:
-                if ((word in self.output_recipes[recipe]['title']) &
+                if ((word in self.output_recipes[recipe]['title'].lower()) &
                         (('vegan' or 'vegetarian' or 'veggie') not in self.output_recipes[recipe]['title'])):
                     result_ids.append(self.output_recipes[recipe]['id'])
             for ingredient in range(0, len(self.output_recipes[recipe]['missedIngredients'])):
