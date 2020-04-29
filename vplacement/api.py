@@ -15,7 +15,7 @@ app.config['CORS_HEADERS'] = 'Content-Type'
 @cross_origin()
 def home():
     return '''<h1>Vplacement</h1>
-<p>Whoop, whoop, coolest webapp ever!! </p>'''
+<p>request recipe results via /recipeUrl or /recipeId </p>'''
 
 @app.route('/recipeUrl')
 @cross_origin()
