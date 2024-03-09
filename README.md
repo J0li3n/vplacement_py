@@ -4,7 +4,7 @@ This project contains python code to access the Spoonacular API and to transform
 
 ## The steps for finding your recipe
 
-### 1. Go to the website (not possible anymore).
+### 1. Go to the website.
 
 ![Vplacement1](images/vplacement1.PNG)
 
@@ -12,7 +12,7 @@ This project contains python code to access the Spoonacular API and to transform
 
 ![Vplacement2](images/vplacement2.PNG)
 
-### 3. Press search.
+### 3. Press search (doesn't work anymore).
 
 ![Vplacement3](images/vplacement3.PNG)
 
