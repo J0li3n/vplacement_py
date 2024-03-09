@@ -5,14 +5,14 @@ This project contains python code to access the Spoonacular API and to transform
 ## The steps for finding your recipe
 
 1. Go to the website (not possible anymore).
-![Vplacement1](images\vplacement1.PNG)
+![Vplacement1](images/vplacement1.PNG)
 2. Paste the URL of the website with your favorite recipe.
-![Vplacement2](images\vplacement2.PNG)
+![Vplacement2](images/vplacement2.PNG)
 3. Press search.
-![Vplacement3](images\vplacement3.PNG)
+![Vplacement3](images/vplacement3.PNG)
 4. Look at similar, vegetarian recipes and select the one of interest.
-![Vplacement4](images\vplacement4.PNG)
+![Vplacement4](images/vplacement4.PNG)
 5. Find the ingredients.
-![Vplacement5](images\vplacement5.PNG)
+![Vplacement5](images/vplacement5.PNG)
 6. Cook the recipe with the instructions.
-![Vplacement6](images\vplacement6.PNG)
+![Vplacement6](images/vplacement6.PNG)
